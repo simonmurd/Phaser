@@ -205,30 +205,30 @@ const Sfx = {
 // ----------------------------------------------------------------------------
 function preload() {
   // Backgrounds
-  this.load.image('bg_forest', '/assets/bg/forest_outskirts.jpg');
-  this.load.image('bg_battle', '/assets/bg/battle_arena.jpg');
+  this.load.image('bg_forest', 'assets/bg/forest_outskirts.jpg');
+  this.load.image('bg_battle', 'assets/bg/battle_arena.jpg');
 
   // Party Sprites
-  this.load.image('sprite_kaelen', '/assets/sprites/kaelen.png');
-  this.load.image('sprite_lyra',   '/assets/sprites/lyra.png');
-  this.load.image('sprite_brutus', '/assets/sprites/brutus.png');
-  this.load.image('sprite_elara',  '/assets/sprites/elara.png');
+  this.load.image('sprite_kaelen', 'assets/sprites/kaelen.png');
+  this.load.image('sprite_lyra',   'assets/sprites/lyra.png');
+  this.load.image('sprite_brutus', 'assets/sprites/brutus.png');
+  this.load.image('sprite_elara',  'assets/sprites/elara.png');
 
   // NPC Sprites
-  this.load.image('npc_smith', '/assets/sprites/npc_blacksmith.png');
-  this.load.image('npc_chef',  '/assets/sprites/npc_chef.png');
+  this.load.image('npc_smith', 'assets/sprites/npc_blacksmith.png');
+  this.load.image('npc_chef',  'assets/sprites/npc_chef.png');
 
   // Bandit Enemy Sprites
-  this.load.image('bandit_1', '/assets/sprites/bandit_archer.png');
-  this.load.image('bandit_2', '/assets/sprites/bandit_dual.png');
-  this.load.image('bandit_3', '/assets/sprites/bandit_shadow.png');
-  this.load.image('bandit_4', '/assets/sprites/bandit_leader.png');
+  this.load.image('bandit_1', 'assets/sprites/bandit_archer.png');
+  this.load.image('bandit_2', 'assets/sprites/bandit_dual.png');
+  this.load.image('bandit_3', 'assets/sprites/bandit_shadow.png');
+  this.load.image('bandit_4', 'assets/sprites/bandit_leader.png');
 
   // Character Face Portraits (Berbingkai Emas Retro)
-  this.load.image('portrait_kaelen', '/assets/portraits/kaelen.png');
-  this.load.image('portrait_lyra',   '/assets/portraits/lyra.png');
-  this.load.image('portrait_brutus', '/assets/portraits/brutus.png');
-  this.load.image('portrait_elara',  '/assets/portraits/elara.png');
+  this.load.image('portrait_kaelen', 'assets/portraits/kaelen.png');
+  this.load.image('portrait_lyra',   'assets/portraits/lyra.png');
+  this.load.image('portrait_brutus', 'assets/portraits/brutus.png');
+  this.load.image('portrait_elara',  'assets/portraits/elara.png');
 
   // Partikel Procedural (Smoke, Heart, Dust, Sparks)
   const g = this.make.graphics({ x: 0, y: 0, add: false });
@@ -304,7 +304,6 @@ function create() {
   }).setDepth(100);
 
   // 3. NPC Toko Senjata: Pandai Besi Kurcaci (Panel 2)
-  // Menempa di depan tenda senjata dengan anvil & percikan api
   npcSmith = this.add.sprite(220, 318, 'npc_smith').setDisplaySize(48, 68).setDepth(15);
   const anvilSparks = this.add.particles(206, 335, 'p_spark', {
     speed: { min: 25, max: 60 },
@@ -352,7 +351,6 @@ function create() {
 
   ambushPositions.forEach(pos => {
     const bandit = scene.add.sprite(pos.x, pos.y, pos.key).setScale(pos.scale).setDepth(12);
-    // Mata merah menyala berdenyut di dalam semak
     const eyeGlow = scene.add.circle(pos.x - 2, pos.y - 12, 4, 0xef4444, 0.7).setBlendMode('ADD').setDepth(13);
     scene.tweens.add({ targets: eyeGlow, alpha: 0.1, duration: 400 + Math.random() * 300, yoyo: true, repeat: -1 });
     scene.tweens.add({ targets: bandit, y: pos.y - 4, duration: 700 + Math.random() * 300, yoyo: true, repeat: -1 });
@@ -380,12 +378,11 @@ function create() {
     followerShadows.push(shadow);
   });
 
-  // Isi awal riwayat jejak jalan (Trail Queue)
   for (let i = 0; i < HISTORY_DELAY * 4; i++) {
     moveHistory.push({ x: 140, y: 365, flipX: false });
   }
 
-  // 7. Buat Top HUD Berbingkai Emas & Radar Minimap (Sesuai Referensi)
+  // 7. Buat Top HUD Berbingkai Emas & Radar Minimap
   createPartyHUD(this);
 
   // 8. Buat Dialog Box & Prompt Interaksi
@@ -413,7 +410,6 @@ function create() {
 function update(time, delta) {
   if (gameState === 'BATTLE') return;
 
-  // Interaksi Toko / Tutup Dialog
   if (Phaser.Input.Keyboard.JustDown(keyAction)) {
     if (gameState === 'DIALOG' || gameState === 'SHOP') {
       closeDialogue();
@@ -422,7 +418,6 @@ function update(time, delta) {
     }
   }
 
-  // Hotkey Pembelian di Toko Senjata (1: Pedang, 2: Kapak, 3: Perisai)
   if (gameState === 'SHOP') {
     if (Phaser.Input.Keyboard.JustDown(key1)) buyWeapon(1, this);
     if (Phaser.Input.Keyboard.JustDown(key2)) buyWeapon(2, this);
@@ -434,7 +429,6 @@ function update(time, delta) {
     return;
   }
 
-  // Pergerakan Kaelen (WASD & Panah)
   const speed = 165;
   let vx = 0, vy = 0;
 
@@ -446,7 +440,6 @@ function update(time, delta) {
 
   leaderSprite.setVelocity(vx, vy);
 
-  // Batasi jalur jalan tanah (Y: 345 s/d 400)
   leaderSprite.y = Phaser.Math.Clamp(leaderSprite.y, 345, 400);
   leaderShadow.x = leaderSprite.x;
   leaderShadow.y = leaderSprite.y + 31;
@@ -455,13 +448,11 @@ function update(time, delta) {
 
   if (isMoving) {
     walkStep += delta * 0.015;
-    // Animasi Langkah Kaki (Bobbing Vertikal Halus)
     const bob = Math.sin(walkStep * 6) * 2.5;
     leaderSprite.y += bob;
 
     if (Math.sin(walkStep * 6) > 0.9) Sfx.playStep();
 
-    // Partikel Debu
     if (Math.random() < 0.25) {
       this.dustEmitter.emitParticleAt(leaderSprite.x, leaderSprite.y + 30);
     }
@@ -469,12 +460,10 @@ function update(time, delta) {
     if (vx < 0) leaderSprite.setFlipX(true);
     else if (vx > 0) leaderSprite.setFlipX(false);
 
-    // LOGIKA FOLLOWER TRAIL QUEUE: Simpan posisi terdepan
     moveHistory.unshift({ x: leaderSprite.x, y: leaderSprite.y - bob, flipX: leaderSprite.flipX });
     if (moveHistory.length > HISTORY_DELAY * 4) moveHistory.pop();
   }
 
-  // Perbarui Posisi Para Pengikut (Lyra, Brutus, Elara)
   followers.forEach((follower, index) => {
     const historyIndex = (index + 1) * HISTORY_DELAY;
     if (moveHistory[historyIndex]) {
@@ -489,13 +478,8 @@ function update(time, delta) {
     }
   });
 
-  // Cek Zona Aman Kedai Makanan (Panel 3: Safe Zone Rest & Heal)
   checkFoodSafeZone(this, time);
-
-  // Cek Penyergapan Bandit di Ujung Kanan (Panel 4: Ambush Alert)
   checkAmbushTrigger(this);
-
-  // Perbarui Ikon Party di Minimap
   updateMinimapRadar();
 }
 
@@ -552,7 +536,7 @@ function buyWeapon(itemType, scene) {
 }
 
 // ----------------------------------------------------------------------------
-// FITUR PANEL 3: SAFE ZONE KEDAI MAKANAN (REGENERASI HP/MP & PARTIKEL HATI)
+// FITUR PANEL 3: SAFE ZONE KEDAI MAKANAN
 // ----------------------------------------------------------------------------
 function checkFoodSafeZone(scene, time) {
   const distChef = Phaser.Math.Distance.Between(leaderSprite.x, leaderSprite.y, npcChef.x, npcChef.y);
@@ -579,8 +563,6 @@ function checkFoodSafeZone(scene, time) {
         scene.healEmitter.emitParticleAt(leaderSprite.x, leaderSprite.y - 10, 3);
         followers.forEach(f => scene.healEmitter.emitParticleAt(f.x, f.y - 10, 2));
         updatePartyHUDVisuals();
-
-        // Teks Floating Healing
         showFloatingText(scene, leaderSprite.x, leaderSprite.y - 35, '+12 HP  +8 MP', '#86efac');
       }
     }
@@ -593,12 +575,11 @@ function checkFoodSafeZone(scene, time) {
 }
 
 // ----------------------------------------------------------------------------
-// FITUR PANEL 4: AMBUSH ALERT CUTSCENE (PENYERGAPAN PENJAHAT)
+// FITUR PANEL 4: AMBUSH ALERT CUTSCENE
 // ----------------------------------------------------------------------------
 function checkAmbushTrigger(scene) {
   if (ambushTriggered) return;
 
-  // Jika party mendekati semak-semak di sisi timur (X > 660)
   if (leaderSprite.x > 660) {
     ambushTriggered = true;
     gameState = 'AMBUSH_CUTSCENE';
@@ -606,7 +587,6 @@ function checkAmbushTrigger(scene) {
 
     Sfx.playAlert();
 
-    // 1. Munculkan Tanda Seru (!) Bouncing di atas kepala seluruh party
     const alertIcons = [];
     const partySprites = [leaderSprite, ...followers];
     partySprites.forEach((heroSprite, i) => {
@@ -625,11 +605,9 @@ function checkAmbushTrigger(scene) {
       alertIcons.push(alert);
     });
 
-    // 2. Kamera Bergetar & Layar Menggelap ke Nuansa Bahaya (Suspense Color Shift)
     scene.cameras.main.shake(400, 0.012);
     const dangerOverlay = scene.add.rectangle(400, 240, 800, 480, 0x1e1b4b, 0.45).setDepth(150);
 
-    // 3. Bandit Melompat Keluar dari Semak ke Tengah Jalan
     lurkingBandits.forEach((item, idx) => {
       scene.tweens.add({
         targets: item.sprite,
@@ -642,7 +620,6 @@ function checkAmbushTrigger(scene) {
       item.glow.destroy();
     });
 
-    // 4. Transisi Masuk Mode Battle (Panel 5) setelah cutscene 1.2 detik
     scene.time.delayedCall(1200, () => {
       alertIcons.forEach(a => a.destroy());
       dangerOverlay.destroy();
@@ -660,18 +637,13 @@ let battleLogText = null;
 
 function startBattleSequence(scene) {
   gameState = 'BATTLE';
-
-  // Efek Screen Flash / Pixel Shatter Transition
   scene.cameras.main.flash(450, 255, 255, 255);
 
-  // Buat Container Khusus Pertarungan
   battleContainer = scene.add.container(0, 0).setDepth(500);
 
-  // 1. Background Arena Pertarungan Malam Hari (16-bit HD Pixel Art)
   bgBattle = scene.add.image(400, 240, 'bg_battle').setDisplaySize(800, 480);
   battleContainer.add(bgBattle);
 
-  // 2. Spawn Formasi Battle Party di Sisi Kiri
   battlePartySprites = [];
   const partyPositions = [
     { x: 180, y: 220, key: 'sprite_kaelen', scale: 0.28 },
@@ -681,17 +653,14 @@ function startBattleSequence(scene) {
   ];
 
   partyPositions.forEach((pos, i) => {
-    // Shadow
     const sh = scene.add.ellipse(pos.x, pos.y + 40, 36, 12, 0x000000, 0.45);
     const heroSprite = scene.add.sprite(pos.x, pos.y, pos.key).setScale(pos.scale);
-    // Battle idle bounce
     scene.tweens.add({ targets: heroSprite, y: pos.y - 4, duration: 600 + i * 80, yoyo: true, repeat: -1 });
 
     battleContainer.add([sh, heroSprite]);
     battlePartySprites.push(heroSprite);
   });
 
-  // 3. Spawn 4 Bandit Musuh di Sisi Kiri / Kanan Mengepung
   battleEnemySprites = [];
   const enemyPositions = [
     { x: 550, y: 180, key: 'bandit_1', scale: 0.26 },
@@ -706,7 +675,6 @@ function startBattleSequence(scene) {
     const sprite = scene.add.sprite(pos.x, pos.y, pos.key).setScale(pos.scale).setFlipX(true);
     scene.tweens.add({ targets: sprite, y: pos.y - 5, duration: 700 + i * 90, yoyo: true, repeat: -1 });
 
-    // Bar HP di atas kepala musuh
     const hpBarBg = scene.add.rectangle(pos.x, pos.y - 45, 48, 6, 0x450a0a);
     const hpBarFill = scene.add.rectangle(pos.x - 24, pos.y - 45, 48, 6, 0xef4444).setOrigin(0, 0.5);
     const nameLabel = scene.add.text(pos.x, pos.y - 56, enemy.name, {
@@ -717,7 +685,6 @@ function startBattleSequence(scene) {
     battleEnemySprites.push({ sprite, hpBarFill, enemy, hpBarBg, nameLabel });
   });
 
-  // 4. Panel UI Menu Pertarungan Bawah (Retro Command Window)
   const menuBox = scene.add.rectangle(400, 425, 760, 95, 0x090d16, 0.95);
   menuBox.setStrokeStyle(2.5, 0xe2e8f0);
 
@@ -732,7 +699,6 @@ function startBattleSequence(scene) {
 
   battleContainer.add([menuBox, battleLogText, cmdAttack, cmdMagic, cmdItem, cmdRun]);
 
-  // Listener Tombol Pertarungan (1, 2, 3, 4)
   const handleBattleInput = (e) => {
     if (gameState !== 'BATTLE' || !isPlayerTurn) return;
 
@@ -746,7 +712,6 @@ function startBattleSequence(scene) {
   scene.events.once('shutdown', () => window.removeEventListener('keydown', handleBattleInput));
 }
 
-// Eksekusi Serangan Fisik
 function executePlayerAttack(scene) {
   isPlayerTurn = false;
   Sfx.playSlash();
@@ -761,7 +726,6 @@ function executePlayerAttack(scene) {
     duration: 180,
     yoyo: true,
     onYoyo: () => {
-      // Efek Tebasan Visual
       scene.cameras.main.shake(120, 0.008);
       const dmg = Math.floor(party[0].atk * (0.9 + Math.random() * 0.3));
       target.enemy.hp = Math.max(0, target.enemy.hp - dmg);
@@ -781,7 +745,6 @@ function executePlayerAttack(scene) {
   });
 }
 
-// Eksekusi Sihir Lyra (Fireball / Meteor)
 function executePlayerMagic(scene) {
   if (party[1].mp < 15) {
     battleLogText.setText('❌ MP Lyra tidak cukup (Butuh 15 MP)!');
@@ -812,7 +775,6 @@ function executePlayerMagic(scene) {
   });
 }
 
-// Eksekusi Penggunaan Potion
 function executePlayerItem(scene) {
   if (potions <= 0) {
     battleLogText.setText('❌ Potion kamu habis!');
@@ -826,772 +788,176 @@ function executePlayerItem(scene) {
     hero.hp = Math.min(hero.maxHp, hero.hp + 45);
   });
   updatePartyHUDVisuals();
-  battleLogText.setText('🧪 Menggunakan Elixir Potion! Seluruh party pulih +45 HP! Sisa: ' + potions);
+  battleLogText.setText('🧪 Menggunakan Elixir Potion! Seluruh party pulih +45 HP.');
 
-  scene.time.delayedCall(800, () => {
+  scene.time.delayedCall(600, () => {
     checkBattleStateOrEnemyTurn(scene);
   });
 }
 
-// Eksekusi Kabur (Run)
 function executePlayerRun(scene) {
-  battleLogText.setText('💨 Party berhasil mundur dengan selamat ke zona aman!');
+  isPlayerTurn = false;
+  Sfx.playSlash();
+  battleLogText.setText('🏃 Berhasil melarikan diri dari penyergapan bandit!');
+  
   scene.time.delayedCall(800, () => {
-    exitBattle(scene);
+    battleContainer.destroy();
+    gameState = 'EXPLORING';
+    isPlayerTurn = true;
+    leaderSprite.x -= 80;
   });
 }
 
-// Giliran Musuh Menyerang
 function checkBattleStateOrEnemyTurn(scene) {
-  const aliveEnemies = battleEnemySprites.filter(item => item.enemy.hp > 0);
-  if (aliveEnemies.length === 0) {
+  const allEnemiesDefeated = enemies.every(e => e.hp <= 0);
+  if (allEnemiesDefeated) {
     return handleVictory(scene);
   }
 
-  // Giliran Bandit Menyerang
-  scene.time.delayedCall(600, () => {
-    const attacker = aliveEnemies[Math.floor(Math.random() * aliveEnemies.length)];
+  battleLogText.setText('⚠️ Bandit bersiap melancarkan serangan balasan!');
+  scene.time.delayedCall(700, () => {
+    const activeEnemies = enemies.filter(e => e.hp > 0);
+    const attacker = activeEnemies[Math.floor(Math.random() * activeEnemies.length)];
     const targetHero = party[Math.floor(Math.random() * party.length)];
-    const dmg = Math.max(5, attacker.enemy.atk - Math.floor(targetHero.def * 0.5));
-
+    const dmg = Math.max(5, attacker.atk - Math.floor(targetHero.def * 0.4));
+    
+    targetHero.hp = Math.max(0, targetHero.hp - dmg);
+    updatePartyHUDVisuals();
     Sfx.playSlash();
-    scene.tweens.add({
-      targets: attacker.sprite,
-      x: attacker.sprite.x - 40,
-      duration: 150,
-      yoyo: true,
-      onYoyo: () => {
-        targetHero.hp = Math.max(1, targetHero.hp - dmg);
+
+    battleLogText.setText('⚔️ ' + attacker.name + ' menyerang ' + targetHero.name + ' (' + dmg + ' DMG)!');
+    scene.cameras.main.shake(100, 0.006);
+
+    const allHeroesDead = party.every(h => h.hp <= 0);
+    if (allHeroesDead) {
+      battleLogText.setText('💀 Seluruh Party K.O... Game Over!');
+      scene.time.delayedCall(1500, () => {
+        battleContainer.destroy();
+        gameState = 'EXPLORING';
+        party.forEach(h => { h.hp = h.maxHp; });
+        leaderSprite.x = 140;
+        ambushTriggered = false;
         updatePartyHUDVisuals();
-        showFloatingText(scene, 180, 200, '-' + dmg + ' HP', '#ef4444');
-        battleLogText.setText('⚔️ ' + attacker.enemy.name + ' menyerang ' + targetHero.name + ' sebesar ' + dmg + ' DMG!');
-      },
-      onComplete: () => {
-        isPlayerTurn = true;
-      }
+      });
+      isPlayerTurn = true;
+      return;
+    }
+
+    scene.time.delayedCall(900, () => {
+      battleLogText.setText('⚔️ Giliran Party Anda! Pilih Perintah (1-4):');
+      isPlayerTurn = true;
     });
   });
 }
 
-// Kemenangan Pertempuran
 function handleVictory(scene) {
   Sfx.playVictory();
-  gold += 80;
-  battleLogText.setText('🎉 VICTORY! Seluruh Bandit dikalahkan! EXP +120 | Gold +80 G diperoleh!');
-  updatePartyHUDVisuals();
+  gold += 120;
+  battleLogText.setText('🎉 KEMENANGAN! Party mengalahkan bandit! (+120 Gold, Total: ' + gold + ' G)');
 
-  scene.time.delayedCall(2200, () => {
-    exitBattle(scene);
+  scene.time.delayedCall(1600, () => {
+    battleContainer.destroy();
+    gameState = 'EXPLORING';
+    isPlayerTurn = true;
+    ambushTriggered = true;
+    leaderSprite.x = 730;
+    updatePartyHUDVisuals();
   });
 }
 
-function exitBattle(scene) {
-  if (battleContainer) {
-    battleContainer.destroy();
-    battleContainer = null;
-  }
-  gameState = 'EXPLORING';
-  leaderSprite.setPosition(520, 375);
-  followers.forEach((f, idx) => f.setPosition(520 - (idx + 1) * 32, 375));
-  moveHistory = [];
-  for (let i = 0; i < HISTORY_DELAY * 4; i++) {
-    moveHistory.push({ x: 520, y: 375, flipX: false });
-  }
-  ambushTriggered = false;
-  scene.cameras.main.flash(300, 255, 255, 255);
-}
-
 // ----------------------------------------------------------------------------
-// TOP HUD BERBINGKAI EMAS RETRO & RADAR MINIMAP (SESUAI GAMBAR REFERENSI)
+// UI & HUD HELPER FUNCTIONS
 // ----------------------------------------------------------------------------
-let hudPartyBars = [];
-let radarPartyDot = null;
-
 function createPartyHUD(scene) {
-  // 4 Kotak Status Karakter di Sisi Kiri-Tengah Atas
-  const portraitsMap = {
-    kaelen: 'portrait_kaelen',
-    lyra:   'portrait_lyra',
-    brutus: 'portrait_brutus',
-    elara:  'portrait_elara'
-  };
+  const hudBg = scene.add.rectangle(400, 30, 780, 48, 0x090d16, 0.9).setDepth(300);
+  hudBg.setStrokeStyle(2, 0xd4af37);
+
+  window.partyHUDCards = [];
 
   party.forEach((hero, i) => {
-    const x = 12 + i * 144;
-    const y = 10;
+    const x = 95 + i * 175;
+    
+    const portraitBg = scene.add.rectangle(x - 55, 30, 36, 36, 0x1e293b).setDepth(301);
+    portraitBg.setStrokeStyle(1.5, 0xd4af37);
+    const portrait = scene.add.sprite(x - 55, 30, 'portrait_' + hero.id).setDisplaySize(32, 32).setDepth(302);
 
-    // Bingkai Luar Kotak Karakter (Ornate Dark Blue Border)
-    const cardBg = scene.add.rectangle(x + 68, y + 21, 138, 42, 0x090d16, 0.92).setDepth(100);
-    cardBg.setStrokeStyle(1.5, 0x475569);
+    const nameText = scene.add.text(x - 33, 13, hero.name, {
+      fontSize: '11px', color: '#fde047', fontFamily: 'monospace', fontStyle: 'bold'
+    }).setDepth(301);
 
-    // Mini Portrait Karakter dengan Bingkai Emas
-    const portraitKey = portraitsMap[hero.id];
-    scene.add.image(x + 18, y + 21, portraitKey).setDisplaySize(28, 36).setDepth(101);
+    const lvlText = scene.add.text(x + 52, 13, 'Lv.' + hero.level, {
+      fontSize: '9px', color: '#cbd5e1', fontFamily: 'monospace'
+    }).setOrigin(1, 0).setDepth(301);
 
-    // Info Nama & Level
-    scene.add.text(x + 36, y + 4, hero.name, {
-      fontSize: '10px', color: '#f8fafc', fontFamily: 'monospace', fontStyle: 'bold'
-    }).setDepth(101);
+    const hpBg = scene.add.rectangle(x - 33, 27, 85, 5, 0x450a0a).setOrigin(0, 0.5).setDepth(301);
+    const hpFill = scene.add.rectangle(x - 33, 27, 85, 5, 0xef4444).setOrigin(0, 0.5).setDepth(302);
 
-    scene.add.text(x + 98, y + 4, 'Lv.' + hero.level, {
-      fontSize: '8px', color: '#fde047', fontFamily: 'monospace'
-    }).setDepth(101);
+    const mpBg = scene.add.rectangle(x - 33, 37, 85, 4, 0x082f49).setOrigin(0, 0.5).setDepth(301);
+    const mpFill = scene.add.rectangle(x - 33, 37, 85, 4, 0x06b6d4).setOrigin(0, 0.5).setDepth(302);
 
-    // Bar HP
-    scene.add.text(x + 36, y + 17, 'HP', { fontSize: '8px', color: '#f87171', fontFamily: 'monospace', fontStyle: 'bold' }).setDepth(101);
-    scene.add.rectangle(x + 88, y + 20, 74, 5, 0x450a0a).setDepth(101);
-    const hpFill = scene.add.rectangle(x + 51, y + 20, 74, 5, 0x22c55e).setOrigin(0, 0.5).setDepth(102);
-
-    // Bar MP
-    scene.add.text(x + 36, y + 27, 'MP', { fontSize: '8px', color: '#60a5fa', fontFamily: 'monospace', fontStyle: 'bold' }).setDepth(101);
-    scene.add.rectangle(x + 88, y + 30, 74, 4, 0x172554).setDepth(101);
-    const mpFill = scene.add.rectangle(x + 51, y + 30, 74, 4, 0x38bdf8).setOrigin(0, 0.5).setDepth(102);
-
-    hudPartyBars.push({ hero, hpFill, mpFill });
+    window.partyHUDCards.push({ hero, hpFill, mpFill });
   });
 
-  // Radar Minimap di Pojok Kanan Atas
-  const mapX = 725, mapY = 32;
-  const miniMapBg = scene.add.rectangle(mapX, mapY, 116, 44, 0x090d16, 0.95).setDepth(100);
-  miniMapBg.setStrokeStyle(1.5, 0x64748b);
-
-  scene.add.text(mapX - 52, mapY - 18, 'MAP: FOREST', { fontSize: '8px', color: '#94a3b8', fontFamily: 'monospace' }).setDepth(101);
-  scene.add.text(mapX + 12, mapY - 18, '🪙 ' + gold + 'G', { fontSize: '8px', color: '#fde047', fontFamily: 'monospace', fontStyle: 'bold' }).setDepth(101);
-
-  // Ikon-Ikon Radar
-  scene.add.rectangle(mapX - 25, mapY + 6, 7, 7, 0xef4444).setDepth(101); // Toko Senjata
-  scene.add.rectangle(mapX + 10, mapY + 6, 7, 7, 0x22c55e).setDepth(101); // Kedai Makanan
-  scene.add.rectangle(mapX + 42, mapY + 6, 7, 7, 0xf59e0b).setDepth(101); // Area Ambush
-
-  radarPartyDot = scene.add.circle(mapX - 45, mapY + 6, 3.5, 0x38bdf8).setDepth(102);
-}
-
-function updateMinimapRadar() {
-  if (!radarPartyDot || !leaderSprite) return;
-  const mapX = 725;
-  const relativeX = (leaderSprite.x / 800) * 90 - 45;
-  radarPartyDot.x = mapX + relativeX;
+  const mmBg = scene.add.rectangle(755, 30, 64, 36, 0x020617, 0.85).setDepth(300);
+  mmBg.setStrokeStyle(1, 0x64748b);
+  window.minimapPlayerDot = scene.add.circle(730, 30, 3.5, 0x38bdf8).setDepth(301);
+  scene.add.text(755, 14, 'MAP: FOREST', { fontSize: '7px', color: '#94a3b8', fontFamily: 'monospace' }).setOrigin(0.5).setDepth(301);
 }
 
 function updatePartyHUDVisuals() {
-  hudPartyBars.forEach(item => {
-    const hpPct = Math.max(0, Math.min(1, item.hero.hp / item.hero.maxHp));
-    const mpPct = Math.max(0, Math.min(1, item.hero.mp / item.hero.maxMp));
-    item.hpFill.width = 74 * hpPct;
-    item.mpFill.width = 74 * mpPct;
+  if (!window.partyHUDCards) return;
+  window.partyHUDCards.forEach(card => {
+    card.hpFill.width = 85 * (card.hero.hp / card.hero.maxHp);
+    card.mpFill.width = 85 * (card.hero.mp / card.hero.maxMp);
   });
 }
 
-// ----------------------------------------------------------------------------
-// KOTAK DIALOG & FLOATING NUMBERS
-// ----------------------------------------------------------------------------
+function updateMinimapRadar() {
+  if (!window.minimapPlayerDot) return;
+  const mappedX = 723 + (leaderSprite.x / 800) * 64;
+  window.minimapPlayerDot.x = Phaser.Math.Clamp(mappedX, 723, 787);
+}
+
 function createDialogueUI(scene) {
-  interactPrompt = scene.add.text(400, 442, '', {
-    fontSize: '11px', color: '#fde047', fontFamily: 'monospace', fontStyle: 'bold',
-    backgroundColor: '#090d16', padding: { x: 8, y: 4 }
-  }).setOrigin(0.5).setVisible(false).setDepth(200);
+  dialogueBox = scene.add.rectangle(400, 410, 750, 90, 0x090d16, 0.94).setDepth(400).setVisible(false);
+  dialogueBox.setStrokeStyle(2, 0xd4af37);
 
-  dialogueBox = scene.add.rectangle(400, 432, 750, 78, 0x090d16, 0.96).setVisible(false).setDepth(200);
-  dialogueBox.setStrokeStyle(2, 0xe2e8f0);
-
-  dialogueText = scene.add.text(50, 404, '', {
+  dialogueText = scene.add.text(50, 375, '', {
     fontSize: '11px', color: '#f8fafc', fontFamily: 'monospace', lineSpacing: 4
-  }).setVisible(false).setDepth(201);
+  }).setDepth(401);
+
+  interactPrompt = scene.add.text(400, 445, '', {
+    fontSize: '11px', color: '#fde047', fontFamily: 'monospace', backgroundColor: '#0f172a', padding: { x: 8, y: 3 }
+  }).setOrigin(0.5).setDepth(400).setVisible(false);
 }
 
-function openDialogue(speaker, text) {
+function openDialogue(title, text) {
+  dialogueText.setText('【 ' + title + ' 】\\n' + text);
   dialogueBox.setVisible(true);
-  dialogueText.setText('[' + speaker + ']\\n' + text).setVisible(true);
-  interactPrompt.setVisible(false);
+  dialogueText.setVisible(true);
 }
 
-function updateDialogueText(speaker, text) {
-  dialogueText.setText('[' + speaker + ']\\n' + text);
+function updateDialogueText(title, text) {
+  dialogueText.setText('【 ' + title + ' 】\\n' + text);
 }
 
 function closeDialogue() {
+  gameState = 'EXPLORING';
   dialogueBox.setVisible(false);
   dialogueText.setVisible(false);
-  gameState = 'EXPLORING';
 }
 
-function showFloatingText(scene, x, y, msg, color) {
+function showFloatingText(scene, x, y, msg, colorHex) {
   const txt = scene.add.text(x, y, msg, {
-    fontSize: '12px', color: color, fontFamily: 'monospace', fontStyle: 'bold'
-  }).setOrigin(0.5).setDepth(300);
+    fontSize: '12px', color: colorHex, fontFamily: 'monospace', fontStyle: 'bold'
+  }).setOrigin(0.5).setDepth(250);
 
   scene.tweens.add({
     targets: txt,
-    y: y - 28,
+    y: y - 35,
     alpha: 0,
-    duration: 1000,
+    duration: 900,
     onComplete: () => txt.destroy()
-  });
-}
-`
-  },
-  {
-    id: 'module_1',
-    title: '📘 Modul 1: Logika Pergerakan Party & Follower',
-    panelNumber: 'Panel 1',
-    subtitle: 'Scene Awal: Party Memasuki Tepi Hutan (Forest Outskirts)',
-    description: 'Pelajari cara membuat pergerakan 4 karakter berbaris (Party Formation) menggunakan teknik array history queue dengan sprite 16-bit HD Pixel Art.',
-    learningPoints: [
-      'Logika Antrian Jejak (Trail History Queue): moveHistory.unshift({ x, y, flipX })',
-      'Pengambilan jarak sampling (HISTORY_DELAY * index) agar karakter tidak bertumpuk',
-      'Animasi Walk Cycle side-view bobbing & pembalikan arah sprite (setFlipX)',
-      'Batasan jalur setapak dengan Phaser.Math.Clamp'
-    ],
-    code: `// MODUL 1: PERGERAKAN PARTY & FOLLOWER TRAIL (FOREST OUTSKIRTS)
-const config = {
-  type: Phaser.AUTO,
-  width: 800,
-  height: 480,
-  backgroundColor: '#0a0d14',
-  render: { pixelArt: true, roundPixels: true },
-  scale: {
-    mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: 800,
-    height: 480
-  },
-  physics: { default: 'arcade', arcade: { gravity: { y: 0 } } },
-  scene: { preload, create, update }
-};
-
-const game = new Phaser.Game(config);
-
-let leader, leaderShadow;
-let followers = [], followerShadows = [];
-let moveHistory = [];
-const HISTORY_DELAY = 14;
-let walkStep = 0;
-
-function preload() {
-  this.load.image('bg_forest', '/assets/bg/forest_outskirts.jpg');
-  this.load.image('sprite_kaelen', '/assets/sprites/kaelen.png');
-  this.load.image('sprite_lyra',   '/assets/sprites/lyra.png');
-  this.load.image('sprite_brutus', '/assets/sprites/brutus.png');
-  this.load.image('sprite_elara',  '/assets/sprites/elara.png');
-}
-
-function create() {
-  this.add.image(400, 240, 'bg_forest').setDisplaySize(800, 480);
-
-  leaderShadow = this.add.ellipse(140, 396, 28, 9, 0x000000, 0.45);
-  leader = this.physics.add.sprite(140, 365, 'sprite_kaelen').setDisplaySize(44, 66);
-  leader.setCollideWorldBounds(true);
-
-  const followerKeys = [
-    { key: 'sprite_lyra', w: 40, h: 64 },
-    { key: 'sprite_brutus', w: 46, h: 62 },
-    { key: 'sprite_elara', w: 40, h: 64 }
-  ];
-
-  followerKeys.forEach((item, idx) => {
-    const startX = 140 - (idx + 1) * 32;
-    const sh = this.add.ellipse(startX, 396, 26, 8, 0x000000, 0.4);
-    const spr = this.add.sprite(startX, 365, item.key).setDisplaySize(item.w, item.h);
-    followers.push(spr);
-    followerShadows.push(sh);
-  });
-
-  for (let i = 0; i < HISTORY_DELAY * 4; i++) {
-    moveHistory.push({ x: 140, y: 365, flipX: false });
-  }
-
-  this.cursors = this.input.keyboard.createCursorKeys();
-  this.add.text(20, 20, 'MODUL 1: Gunakan Tombol Panah (Panah Kiri/Kanan/Atas/Bawah) untuk Bergerak', {
-    fontSize: '12px', color: '#fde047', fontFamily: 'monospace', fontStyle: 'bold',
-    backgroundColor: '#090d16', padding: { x: 8, y: 4 }
-  });
-}
-
-function update(time, delta) {
-  const speed = 160;
-  let vx = 0, vy = 0;
-
-  if (this.cursors.left.isDown) vx = -speed;
-  else if (this.cursors.right.isDown) vx = speed;
-
-  if (this.cursors.up.isDown) vy = -speed * 0.7;
-  else if (this.cursors.down.isDown) vy = speed * 0.7;
-
-  leader.setVelocity(vx, vy);
-  leader.y = Phaser.Math.Clamp(leader.y, 345, 400);
-  leaderShadow.x = leader.x;
-  leaderShadow.y = leader.y + 31;
-
-  const isMoving = vx !== 0 || vy !== 0;
-
-  if (isMoving) {
-    walkStep += delta * 0.015;
-    const bob = Math.sin(walkStep * 6) * 2.5;
-    leader.y += bob;
-
-    if (vx < 0) leader.setFlipX(true);
-    else if (vx > 0) leader.setFlipX(false);
-
-    moveHistory.unshift({ x: leader.x, y: leader.y - bob, flipX: leader.flipX });
-    if (moveHistory.length > HISTORY_DELAY * 4) moveHistory.pop();
-  }
-
-  followers.forEach((f, idx) => {
-    const target = moveHistory[(idx + 1) * HISTORY_DELAY];
-    if (target) {
-      f.x = target.x;
-      f.y = target.y + (isMoving ? Math.sin(walkStep * 6 - (idx + 1)) * 2 : 0);
-      f.setFlipX(target.flipX);
-      followerShadows[idx].x = f.x;
-      followerShadows[idx].y = target.y + 31;
-    }
-  });
-}
-`
-  },
-  {
-    id: 'module_2',
-    title: '🛡️ Modul 2: Interaksi Toko Senjata (Weapons Merchant)',
-    panelNumber: 'Panel 2',
-    subtitle: 'Tenda Pandai Besi Kurcaci & Sistem Belanja Retro',
-    description: 'Pelajari cara mendeteksi jarak karakter dengan NPC pandai besi dan menampilkan jendela percakapan serta katalog senjata menggunakan tombol aksi.',
-    learningPoints: [
-      'Deteksi Jarak Euclidean: Phaser.Math.Distance.Between(x1, y1, x2, y2)',
-      'Kotak Dialog Monokrom Retro & Speaker Tag',
-      'Logika Transaksi: Cek kecukupan Gold & penambahan stat senjata'
-    ],
-    code: `// MODUL 2: TOKO SENJATA & INTERAKSI NPC (WEAPONS MERCHANT)
-const config = {
-  type: Phaser.AUTO,
-  width: 800,
-  height: 480,
-  backgroundColor: '#0a0d14',
-  render: { pixelArt: true, roundPixels: true },
-  scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH, width: 800, height: 480 },
-  physics: { default: 'arcade', arcade: { gravity: { y: 0 } } },
-  scene: { preload, create, update }
-};
-
-const game = new Phaser.Game(config);
-
-let player, smith;
-let gold = 120, atk = 28;
-let inDialog = false;
-let dialogBox, dialogText, promptText;
-
-function preload() {
-  this.load.image('bg_forest', '/assets/bg/forest_outskirts.jpg');
-  this.load.image('sprite_kaelen', '/assets/sprites/kaelen.png');
-  this.load.image('npc_smith', '/assets/sprites/npc_blacksmith.png');
-}
-
-function create() {
-  this.add.image(400, 240, 'bg_forest').setDisplaySize(800, 480);
-
-  smith = this.add.sprite(220, 318, 'npc_smith').setDisplaySize(48, 68);
-  this.tweens.add({ targets: smith, y: 315, duration: 400, yoyo: true, repeat: -1 });
-
-  this.add.text(220, 275, '🛡️ TOKO SENJATA', {
-    fontSize: '9px', color: '#fde047', fontFamily: 'monospace', fontStyle: 'bold',
-    backgroundColor: '#1e293b', padding: { x: 4, y: 2 }
-  }).setOrigin(0.5);
-
-  player = this.physics.add.sprite(160, 365, 'sprite_kaelen').setDisplaySize(44, 66);
-  player.setCollideWorldBounds(true);
-
-  // Dialog UI
-  promptText = this.add.text(400, 440, 'Tekan [SPASI] untuk Bicara', {
-    fontSize: '12px', color: '#fde047', fontFamily: 'monospace',
-    backgroundColor: '#090d16', padding: { x: 8, y: 4 }
-  }).setOrigin(0.5).setVisible(false);
-
-  dialogBox = this.add.rectangle(400, 430, 750, 75, 0x090d16, 0.95).setVisible(false);
-  dialogBox.setStrokeStyle(2, 0xe2e8f0);
-
-  dialogText = this.add.text(50, 405, '', {
-    fontSize: '11px', color: '#f8fafc', fontFamily: 'monospace', lineSpacing: 4
-  }).setVisible(false);
-
-  this.cursors = this.input.keyboard.createCursorKeys();
-  this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-  this.key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
-
-  this.statusText = this.add.text(20, 20, 'Gold: ' + gold + ' G | ATK: ' + atk, {
-    fontSize: '12px', color: '#fde047', fontFamily: 'monospace', fontStyle: 'bold',
-    backgroundColor: '#090d16', padding: { x: 6, y: 3 }
-  });
-}
-
-function update() {
-  if (inDialog) {
-    player.setVelocity(0, 0);
-    if (Phaser.Input.Keyboard.JustDown(this.key1)) {
-      if (gold >= 50) {
-        gold -= 50;
-        atk += 15;
-        this.statusText.setText('Gold: ' + gold + ' G | ATK: ' + atk);
-        dialogText.setText('[Pandai Besi]\\nPedang Baja berhasil dibeli (+15 ATK)! Sisa Gold: ' + gold + ' G.\\n(Tekan SPASI untuk keluar)');
-      }
-    }
-    if (Phaser.Input.Keyboard.JustDown(this.keySpace)) {
-      inDialog = false;
-      dialogBox.setVisible(false);
-      dialogText.setVisible(false);
-    }
-    return;
-  }
-
-  const speed = 160;
-  let vx = 0, vy = 0;
-  if (this.cursors.left.isDown) vx = -speed;
-  else if (this.cursors.right.isDown) vx = speed;
-  if (this.cursors.up.isDown) vy = -speed * 0.7;
-  else if (this.cursors.down.isDown) vy = speed * 0.7;
-
-  player.setVelocity(vx, vy);
-  player.y = Phaser.Math.Clamp(player.y, 345, 400);
-
-  const dist = Phaser.Math.Distance.Between(player.x, player.y, smith.x, smith.y);
-  if (dist < 85) {
-    promptText.setVisible(true);
-    if (Phaser.Input.Keyboard.JustDown(this.keySpace)) {
-      inDialog = true;
-      promptText.setVisible(false);
-      dialogBox.setVisible(true);
-      dialogText.setText('[Pandai Besi Kurcaci]\\nButuh senjata tangguh?\\n[1] Pedang Ksatria (+15 ATK) - 50 Gold\\n(Tekan 1 untuk Beli, SPASI untuk Batal)').setVisible(true);
-    }
-  } else {
-    promptText.setVisible(false);
-  }
-}
-`
-  },
-  {
-    id: 'module_3',
-    title: '🍖 Modul 3: Kedai Makanan & Safe Zone',
-    panelNumber: 'Panel 3',
-    subtitle: 'Pemulihan HP/MP & Partikel Asap Panggangan Sate',
-    description: 'Pelajari konsep Zona Aman (Safe Zone) RPG di mana karakter memulihkan kesehatan secara bertahap saat berada di dekat kedai makanan.',
-    learningPoints: [
-      'Pemeriksaan Jarak Proksimitas (Safe Zone Radius Trigger)',
-      'Sistem Regenerasi Stat Berkala (Tick Rate Limiting)',
-      'Sistem Partikel Asap & Partikel Hati Melayang'
-    ],
-    code: `// MODUL 3: KEDAI MAKANAN & REST HEALING SAFE ZONE
-const config = {
-  type: Phaser.AUTO,
-  width: 800,
-  height: 480,
-  backgroundColor: '#0a0d14',
-  render: { pixelArt: true, roundPixels: true },
-  scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH, width: 800, height: 480 },
-  physics: { default: 'arcade', arcade: { gravity: { y: 0 } } },
-  scene: { preload, create, update }
-};
-
-const game = new Phaser.Game(config);
-
-let player, chef;
-let hp = 40, maxHp = 120;
-let mp = 10, maxMp = 30;
-let lastHeal = 0;
-let healEmitter;
-
-function preload() {
-  this.load.image('bg_forest', '/assets/bg/forest_outskirts.jpg');
-  this.load.image('sprite_kaelen', '/assets/sprites/kaelen.png');
-  this.load.image('npc_chef', '/assets/sprites/npc_chef.png');
-
-  const g = this.make.graphics({ x: 0, y: 0, add: false });
-  // Smoke
-  g.clear(); g.fillStyle(0xcfd8dc, 0.7); g.fillCircle(4, 4, 4);
-  g.generateTexture('p_smoke', 8, 8);
-  // Heart
-  g.clear(); g.fillStyle(0xef4444);
-  g.fillCircle(3, 3, 3); g.fillCircle(7, 3, 3); g.fillTriangle(0, 4, 10, 4, 5, 10);
-  g.generateTexture('p_heart', 11, 11);
-}
-
-function create() {
-  this.add.image(400, 240, 'bg_forest').setDisplaySize(800, 480);
-
-  chef = this.add.sprite(645, 312, 'npc_chef').setDisplaySize(42, 68);
-  this.tweens.add({ targets: chef, y: 310, duration: 650, yoyo: true, repeat: -1 });
-
-  this.add.particles(588, 305, 'p_smoke', {
-    speedY: { min: -25, max: -45 },
-    speedX: { min: -3, max: 8 },
-    scale: { start: 0.6, end: 1.6 },
-    alpha: { start: 0.7, end: 0 },
-    lifespan: 1500,
-    frequency: 300
-  });
-
-  healEmitter = this.add.particles(0, 0, 'p_heart', {
-    speedY: { min: -35, max: -65 },
-    scale: { start: 0.9, end: 0.3 },
-    alpha: { start: 1, end: 0 },
-    lifespan: 1000,
-    emitting: false
-  });
-
-  player = this.physics.add.sprite(500, 365, 'sprite_kaelen').setDisplaySize(44, 66);
-  player.setCollideWorldBounds(true);
-
-  this.statusText = this.add.text(20, 20, 'HP: ' + hp + '/' + maxHp + ' | MP: ' + mp + '/' + maxMp, {
-    fontSize: '13px', color: '#86efac', fontFamily: 'monospace', fontStyle: 'bold',
-    backgroundColor: '#090d16', padding: { x: 8, y: 4 }
-  });
-
-  this.zoneText = this.add.text(400, 440, '', {
-    fontSize: '12px', color: '#86efac', fontFamily: 'monospace',
-    backgroundColor: '#14532d', padding: { x: 8, y: 4 }
-  }).setOrigin(0.5);
-
-  this.cursors = this.input.keyboard.createCursorKeys();
-}
-
-function update(time) {
-  const speed = 160;
-  let vx = 0, vy = 0;
-  if (this.cursors.left.isDown) vx = -speed;
-  else if (this.cursors.right.isDown) vx = speed;
-  if (this.cursors.up.isDown) vy = -speed * 0.7;
-  else if (this.cursors.down.isDown) vy = speed * 0.7;
-
-  player.setVelocity(vx, vy);
-  player.y = Phaser.Math.Clamp(player.y, 345, 400);
-
-  const dist = Phaser.Math.Distance.Between(player.x, player.y, chef.x, chef.y);
-  if (dist < 110) {
-    this.zoneText.setText('✨ ZONA AMAN KEDAI: Meregenerasi HP & MP!');
-    if (time - lastHeal > 1200) {
-      lastHeal = time;
-      if (hp < maxHp || mp < maxMp) {
-        hp = Math.min(maxHp, hp + 15);
-        mp = Math.min(maxMp, mp + 8);
-        healEmitter.emitParticleAt(player.x, player.y - 15, 3);
-        this.statusText.setText('HP: ' + hp + '/' + maxHp + ' | MP: ' + mp + '/' + maxMp);
-      }
-    }
-  } else {
-    this.zoneText.setText('');
-  }
-}
-`
-  },
-  {
-    id: 'module_4',
-    title: '⚠️ Modul 4: Penyergapan Musuh (Ambush Alert)',
-    panelNumber: 'Panel 4',
-    subtitle: 'Mata Merah Menyala di Semak & Cutscene Peringatan',
-    description: 'Pelajari cara mendesain pemicu ketegangan (Suspense Transition): bandit mengintip di semak, tanda seru (!) muncul, kamera bergetar, dan pergeseran warna latar.',
-    learningPoints: [
-      'Trigger Koordinat: if (player.x > threshold) triggerAmbush()',
-      'Efek Kamera: scene.cameras.main.shake(duration, intensity)',
-      'Overlay Suasana Bahaya (Suspense Color Palette Shift)'
-    ],
-    code: `// MODUL 4: PENYERGAPAN MUSUH & AMBUSH ALERT
-const config = {
-  type: Phaser.AUTO,
-  width: 800,
-  height: 480,
-  backgroundColor: '#0a0d14',
-  render: { pixelArt: true, roundPixels: true },
-  scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH, width: 800, height: 480 },
-  physics: { default: 'arcade', arcade: { gravity: { y: 0 } } },
-  scene: { preload, create, update }
-};
-
-const game = new Phaser.Game(config);
-
-let player;
-let bandits = [];
-let triggered = false;
-
-function preload() {
-  this.load.image('bg_forest', '/assets/bg/forest_outskirts.jpg');
-  this.load.image('sprite_kaelen', '/assets/sprites/kaelen.png');
-  this.load.image('bandit_1', '/assets/sprites/bandit_archer.png');
-  this.load.image('bandit_4', '/assets/sprites/bandit_leader.png');
-}
-
-function create() {
-  this.add.image(400, 240, 'bg_forest').setDisplaySize(800, 480);
-
-  // Bandit mengintip di semak-semak kanan
-  const b1 = this.add.sprite(730, 335, 'bandit_1').setScale(0.16);
-  const b2 = this.add.sprite(775, 325, 'bandit_4').setScale(0.18);
-  bandits.push(b1, b2);
-
-  player = this.physics.add.sprite(300, 365, 'sprite_kaelen').setDisplaySize(44, 66);
-  player.setCollideWorldBounds(true);
-
-  this.add.text(20, 20, 'MODUL 4: Bergeraklah ke arah kanan menuju semak-semak...', {
-    fontSize: '12px', color: '#fde047', fontFamily: 'monospace',
-    backgroundColor: '#090d16', padding: { x: 8, y: 4 }
-  });
-
-  this.cursors = this.input.keyboard.createCursorKeys();
-}
-
-function update() {
-  if (triggered) {
-    player.setVelocity(0, 0);
-    return;
-  }
-
-  const speed = 160;
-  let vx = 0;
-  if (this.cursors.left.isDown) vx = -speed;
-  else if (this.cursors.right.isDown) vx = speed;
-
-  player.setVelocityX(vx);
-
-  if (player.x > 660) {
-    triggered = true;
-    player.setVelocity(0, 0);
-
-    // 1. Tanda Seru (!) Bouncing
-    const alert = this.add.text(player.x, player.y - 50, '❗', { fontSize: '24px' }).setOrigin(0.5);
-    this.tweens.add({ targets: alert, y: player.y - 65, duration: 250, yoyo: true, repeat: 2 });
-
-    // 2. Kamera Bergetar
-    this.cameras.main.shake(400, 0.015);
-
-    // 3. Bandit Melompat Keluar
-    bandits.forEach((b, i) => {
-      this.tweens.add({
-        targets: b,
-        x: 630 - i * 50,
-        y: 365,
-        scale: 0.28,
-        duration: 500,
-        ease: 'Back.easeOut'
-      });
-    });
-
-    this.add.text(400, 430, '⚠️ AMBUSH ALERT! Bandit mengepung party!', {
-      fontSize: '14px', color: '#ef4444', fontFamily: 'monospace', fontStyle: 'bold',
-      backgroundColor: '#090d16', padding: { x: 12, y: 6 }
-    }).setOrigin(0.5);
-  }
-}
-`
-  },
-  {
-    id: 'module_5',
-    title: '⚔️ Modul 5: Sistem Pertarungan Turn-Based (Battle Mode)',
-    panelNumber: 'Panel 5',
-    subtitle: 'Formasi Tempur, Menu Perintah (Attack/Magic/Item/Run) & HP Bar',
-    description: 'Pelajari implementasi sistem pertarungan turn-based klasik: antrian giliran pemain dan musuh, penghitungan damage, bar HP dinamis, dan efek tebasan.',
-    learningPoints: [
-      'State Machine Pertarungan (PLAYER_TURN -> ACTION -> ENEMY_TURN)',
-      'Rumus Damage: damage = Math.floor(attacker.atk * randomFactor)',
-      'Visual Feedback: Teks melayang angka damage & Flash kamera'
-    ],
-    code: `// MODUL 5: SISTEM PERTARUNGAN TURN-BASED (BATTLE ARENA)
-const config = {
-  type: Phaser.AUTO,
-  width: 800,
-  height: 480,
-  backgroundColor: '#0a0d14',
-  render: { pixelArt: true, roundPixels: true },
-  scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH, width: 800, height: 480 },
-  scene: { preload, create }
-};
-
-const game = new Phaser.Game(config);
-
-let hero, enemy;
-let heroHp = 120, enemyHp = 100;
-let heroHpBar, enemyHpBar, logText;
-let isPlayerTurn = true;
-
-function preload() {
-  this.load.image('bg_battle', '/assets/bg/battle_arena.jpg');
-  this.load.image('sprite_kaelen', '/assets/sprites/kaelen.png');
-  this.load.image('bandit_leader', '/assets/sprites/bandit_leader.png');
-}
-
-function create() {
-  this.add.image(400, 240, 'bg_battle').setDisplaySize(800, 480);
-
-  // Kaelen di kiri
-  hero = this.add.sprite(200, 260, 'sprite_kaelen').setScale(0.28);
-  this.tweens.add({ targets: hero, y: 256, duration: 600, yoyo: true, repeat: -1 });
-
-  // Bandit di kanan
-  enemy = this.add.sprite(600, 260, 'bandit_leader').setScale(0.32).setFlipX(true);
-  this.tweens.add({ targets: enemy, y: 255, duration: 700, yoyo: true, repeat: -1 });
-
-  // HP Bar Hero
-  this.add.text(120, 160, 'Kaelen (Hero)', { fontSize: '11px', color: '#f8fafc', fontFamily: 'monospace' });
-  this.add.rectangle(170, 180, 100, 8, 0x450a0a);
-  heroHpBar = this.add.rectangle(120, 180, 100, 8, 0x22c55e).setOrigin(0, 0.5);
-
-  // HP Bar Enemy
-  this.add.text(530, 160, 'Bandit Leader', { fontSize: '11px', color: '#f8fafc', fontFamily: 'monospace' });
-  this.add.rectangle(580, 180, 100, 8, 0x450a0a);
-  enemyHpBar = this.add.rectangle(530, 180, 100, 8, 0xef4444).setOrigin(0, 0.5);
-
-  // Command Box
-  this.add.rectangle(400, 420, 750, 80, 0x090d16, 0.95).setStrokeStyle(2, 0xe2e8f0);
-  logText = this.add.text(45, 395, '⚔️ Giliranmu! Tekan [1] untuk Menyerang!', {
-    fontSize: '12px', color: '#fde047', fontFamily: 'monospace', fontStyle: 'bold'
-  });
-
-  this.add.text(60, 425, '[1] ATTACK ⚔️', { fontSize: '13px', color: '#f8fafc', fontFamily: 'monospace', fontStyle: 'bold' });
-  this.add.text(250, 425, '[2] MAGIC ✨', { fontSize: '13px', color: '#67e8f9', fontFamily: 'monospace', fontStyle: 'bold' });
-
-  const scene = this;
-  this.input.keyboard.on('keydown', (e) => {
-    if (!isPlayerTurn) return;
-
-    if (e.code === 'Digit1') {
-      isPlayerTurn = false;
-      const dmg = 30 + Math.floor(Math.random() * 15);
-
-      scene.tweens.add({
-        targets: hero,
-        x: 520,
-        duration: 150,
-        yoyo: true,
-        onYoyo: () => {
-          enemyHp = Math.max(0, enemyHp - dmg);
-          enemyHpBar.width = Math.max(0, enemyHp);
-          scene.cameras.main.shake(100, 0.01);
-          logText.setText('💥 Kaelen menebas Bandit sebesar ' + dmg + ' Damage!');
-        },
-        onComplete: () => {
-          if (enemyHp <= 0) {
-            logText.setText('🎉 VICTORY! Bandit Leader berhasil dikalahkan!');
-            enemy.setTint(0x333333);
-            return;
-          }
-
-          // Giliran Musuh
-          scene.time.delayedCall(800, () => {
-            const enemyDmg = 18 + Math.floor(Math.random() * 10);
-            scene.tweens.add({
-              targets: enemy,
-              x: 280,
-              duration: 150,
-              yoyo: true,
-              onYoyo: () => {
-                heroHp = Math.max(0, heroHp - enemyDmg);
-                heroHpBar.width = Math.max(0, heroHp);
-                logText.setText('⚔️ Bandit menyerang balik sebesar ' + enemyDmg + ' Damage!');
-              },
-              onComplete: () => {
-                isPlayerTurn = true;
-                logText.setText('⚔️ Giliranmu! Tekan [1] untuk Menyerang!');
-              }
-            });
-          });
-        }
-      });
-    }
   });
 }
 `
