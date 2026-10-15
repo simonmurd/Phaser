@@ -5,6 +5,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
+    base: '/Phaser/', // Ditambahkan agar path asset & bundle sesuai dengan sub-path GitHub Pages
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
