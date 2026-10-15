@@ -1,0 +1,6 @@
+{
+  "name": "JRPG Studio - Belajar Game RPG dengan Phaser JS",
+  "description": "Platform edukasi interaktif untuk mempelajari logika game JRPG klasik dengan Phaser JavaScript: pergerakan party, interaksi NPC & toko, safe zone, ambush, dan turn-based battle.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
